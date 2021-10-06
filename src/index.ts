@@ -1,12 +1,14 @@
 import { Command } from "commander";
 import archiveAllPagesInDb from "./commands/archiveAllPagesInDatabase";
+import removeSelectOptions from "./commands/removeSelectOptions";
 
 const program = new Command();
 program.requiredOption("-t, --token <token>", "notion api token");
 
 archiveAllPagesInDb(program);
+removeSelectOptions(program);
+
 // TODO
-// removeMultiselectOptions.ts
 // createPagesForMultiselect.ts
 // mergeMultiselectValues.ts
 // removeUnusedMultiselectOptions.ts

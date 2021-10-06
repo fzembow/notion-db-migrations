@@ -9,7 +9,7 @@ export type QueryDatabaseResults = QueryDatabaseResponse["results"];
 // TODO: Take this from the library, if it exports it
 export type SelectChoice = {
   id?: string;
-  name?: string;
+  name: string;
   color?:
     | "default"
     | "gray"

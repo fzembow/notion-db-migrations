@@ -6,6 +6,7 @@ import { databaseQueryAll } from "../utils";
 const registerCommand = (program: Command) => {
   program
     .command("archive-all-pages-in-db")
+    .description("archive all pages in a database")
     .option(
       "--db-id <database-id>",
       "The ID of the notion database whose pages shall be archived."
