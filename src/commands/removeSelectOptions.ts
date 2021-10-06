@@ -8,62 +8,78 @@ const registerCommand = (program: Command) => {
     .description(
       "remove options from a select or multi_select property in a database"
     )
-    .option(
+    .requiredOption(
       "--db-id <database-id>",
       "The ID of the notion database whose pages shall be archived."
     )
-    .option(
-      "--property-name <property-name>",
-      "The property from which options should be removed."
+    .requiredOption(
+      "--property <property>",
+      "The name of the property from which options should be removed."
     )
-    .option("--option <options...>", "The options to be removed.")
-    .action(async ({ dbId, propertyName, options }) => {
-      await removeSelectOptions({
-        client: getNotionClient(program),
-        dbId,
-        propertyName,
-        options,
-      });
-    });
+    .requiredOption("--options <options...>", "The options to be removed.")
+    .action(
+      async ({ dbId, property: propertyName, options: optionsToRemove }) => {
+        await removeSelectOptions({
+          client: getNotionClient(program),
+          dbId,
+          propertyName,
+          optionsToRemove,
+        });
+      }
+    );
 };
 
 type Args = {
   client: Client;
   dbId: string;
   propertyName: string;
-  options: string[];
+  optionsToRemove: string[];
 };
 
 /**
- *  Remove named multi_select values
+ *  Remove named select or multi_select values
  */
 export const removeSelectOptions = async ({
   client,
   dbId,
   propertyName,
-  options: optionsToRemove,
+  optionsToRemove,
 }: Args) => {
   const db = await client.databases.retrieve({ database_id: dbId });
   const prop = db.properties[propertyName];
-  if (prop.type !== "multi_select") {
-    // TODO: Add select support
-    throw new Error(`${propertyName} is not a multi_select property`);
-  }
-
-  const propOptions = prop.multi_select.options;
-  const remainingOptions = propOptions.filter(
-    (o) => !optionsToRemove.includes(o.name)
-  );
-  await client.databases.update({
-    database_id: dbId,
-    properties: {
-      [propertyName]: {
-        multi_select: {
-          options: remainingOptions,
+  if (prop.type === "multi_select") {
+    const propOptions = prop.multi_select.options;
+    const remainingOptions = propOptions.filter(
+      (o) => !optionsToRemove.includes(o.name)
+    );
+    await client.databases.update({
+      database_id: dbId,
+      properties: {
+        [propertyName]: {
+          multi_select: {
+            options: remainingOptions,
+          },
         },
       },
-    },
-  });
+    });
+  } else if (prop.type === "select") {
+    const propOptions = prop.select.options;
+    const remainingOptions = propOptions.filter(
+      (o) => !optionsToRemove.includes(o.name)
+    );
+    await client.databases.update({
+      database_id: dbId,
+      properties: {
+        [propertyName]: {
+          select: {
+            options: remainingOptions,
+          },
+        },
+      },
+    });
+  } else {
+    throw new Error(`${propertyName} is not a select or multi_select property`);
+  }
 };
 
 export default registerCommand;

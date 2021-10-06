@@ -1,4 +1,5 @@
 import {
+  GetDatabaseResponse,
   QueryDatabaseParameters,
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
@@ -6,19 +7,14 @@ import {
 export type QueryDatabaseFilter = QueryDatabaseParameters["filter"];
 export type QueryDatabaseResults = QueryDatabaseResponse["results"];
 
-// TODO: Take this from the library, if it exports it
-export type SelectChoice = {
-  id?: string;
-  name: string;
-  color?:
-    | "default"
-    | "gray"
-    | "brown"
-    | "orange"
-    | "yellow"
-    | "green"
-    | "blue"
-    | "purple"
-    | "pink"
-    | "red";
-};
+export type SelectProperty = Extract<
+  GetDatabaseResponse["properties"][string],
+  { type: "select" }
+>;
+
+export type SelectChoice = SelectProperty["select"]["options"];
+
+export type MultiSelectProperty = Extract<
+  GetDatabaseResponse["properties"][string],
+  { type: "multi_select" }
+>;

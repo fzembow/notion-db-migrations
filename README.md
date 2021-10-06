@@ -1,8 +1,10 @@
 # notion-utils
 
-These will probably always be one-offs, so think of this more as useful starting points for further customizations / scripts that need to be run.
+Useful commands to make bulk changes to Notion databases that are not possible within the UI.
 
-## Usage
+Given the flexibility of Notion, these will somewhat always be one-offs, so think of these more as useful starting points for further customizations / scripts that you may need to be run.
+
+# Usage
 
 - Create or reuse an existing [Notion integration](https://developers.notion.com/docs/getting-started)
 - Install the dependendencies here
@@ -17,15 +19,28 @@ yarn
 yarn go
 ```
 
-```
-Usage: index [options] [command]
+# Commands
 
-Options:
-  -t, --token <token>                notion api token
-  -h, --help                         display help for command
+## archive-all-pages-in-db
 
-Commands:
-  archive-all-pages-in-db [options]  archive all pages in a database
-  remove-select-options [options]    remove options from a select or multi_select property in a database
-  help [command]                     display help for command
 ```
+yarn go archive-all-pages-in-db \
+  --token=<TOKEN> \
+  --db-id=<DB_ID>
+```
+
+Individually archives all pages in the specified Notion database.
+
+This is somewhat slow since it archives one page at a time. However, it's helpful because it does not blow away the database schema.
+
+## remove-select-options
+
+```
+yarn go remove-select-options \
+  --token=<TOKEN> \
+  --db-id=<DB_ID> \
+  --property=<PROPERTY_NAME> \
+  --options=<OPTION1> <...>  \
+```
+
+Removes the specified `options` from the `property` column. Works for both **Select** and **Multi select** properties.
