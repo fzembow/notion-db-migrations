@@ -1,7 +1,54 @@
-import { notionClient } from "../notionClient";
+import { Client } from "@notionhq/client/build/src";
+import { Command } from "commander";
+import { getNotionClient } from "../notionClient";
 import { QueryDatabaseFilter, SelectChoice } from "../types";
 import { databaseQueryAll } from "../utils";
-import { removeMultiselectOptions } from "./removeMultiselectOptions";
+import { removeSelectOptions } from "./removeSelectOptions";
+
+const registerCommand = (program: Command) => {
+  program
+    .command("set-select-from-multi-select")
+    .description(
+      "merge options in a select or multi_select property in a database"
+    )
+    .requiredOption(
+      "--db-id <database-id>",
+      "The ID of the notion database to modify."
+    )
+    .requiredOption(
+      "--multi-select-property <multi-select-property>",
+      "The name of the source multi-select property from which choices should be moved."
+    )
+    .requiredOption(
+      "--select-property <select-property>",
+      "The name of the target select property where the choices should be set."
+    )
+    .requiredOption("--options <options...>", "The options to be removed.")
+    .action(
+      async ({
+        dbId,
+        multiSelectProperty: multiSelectPropertyName,
+        selectProperty: selectPropertyName,
+        options: optionNamesToMove,
+      }) => {
+        await setSelectBasedOnMultiselectOptions({
+          client: getNotionClient(program),
+          dbId,
+          multiSelectPropertyName,
+          selectPropertyName,
+          optionNamesToMove,
+        });
+      }
+    );
+};
+
+type Args = {
+  client: Client;
+  dbId: string;
+  multiSelectPropertyName: string;
+  selectPropertyName: string;
+  optionNamesToMove: string[];
+};
 
 /**
  * Set a single select property based on which
@@ -9,17 +56,13 @@ import { removeMultiselectOptions } from "./removeMultiselectOptions";
  * Removes the same from the original page.
  */
 export const setSelectBasedOnMultiselectOptions = async ({
+  client,
   dbId,
   multiSelectPropertyName,
   optionNamesToMove,
-  tgtSingleSelectPropertyName,
-}: {
-  dbId: string;
-  multiSelectPropertyName: string;
-  optionNamesToMove: string[];
-  tgtSingleSelectPropertyName: string;
-}) => {
-  const db = await notionClient.databases.retrieve({ database_id: dbId });
+  selectPropertyName,
+}: Args) => {
+  const db = await client.databases.retrieve({ database_id: dbId });
   const prop = db.properties[multiSelectPropertyName];
   if (prop.type !== "multi_select") {
     throw new Error(
@@ -43,9 +86,9 @@ export const setSelectBasedOnMultiselectOptions = async ({
   });
 
   // Check that the options exist on the target single select
-  const selectProp = db.properties[tgtSingleSelectPropertyName];
+  const selectProp = db.properties[selectPropertyName];
   if (selectProp.type !== "select") {
-    throw new Error(`${tgtSingleSelectPropertyName} is not a select property`);
+    throw new Error(`${selectPropertyName} is not a select property`);
   }
   const targetOptionsMap: Record<string, SelectChoice> = {};
   selectProp.select.options.forEach((o) => {
@@ -64,20 +107,20 @@ export const setSelectBasedOnMultiselectOptions = async ({
         color: sourceOptionsMap[name].color,
       })),
     ];
-    const updateRes = await notionClient.databases.update({
+    const updateRes = await client.databases.update({
       database_id: dbId,
       properties: {
-        [tgtSingleSelectPropertyName]: {
+        [selectPropertyName]: {
           select: {
             options: newOptions,
           },
         },
       },
     });
-    const updatedTgtSelect = updateRes.properties[tgtSingleSelectPropertyName];
+    const updatedTgtSelect = updateRes.properties[selectPropertyName];
     if (updatedTgtSelect.type !== "select") {
       throw new Error(
-        `${tgtSingleSelectPropertyName} is for some reason no longer a "select" property`
+        `${selectPropertyName} is for some reason no longer a "select" property`
       );
     }
     missingSingleSelectOptionNames.forEach((missingName) => {
@@ -86,7 +129,7 @@ export const setSelectBasedOnMultiselectOptions = async ({
       );
       if (!option) {
         throw new Error(
-          `${tgtSingleSelectPropertyName} is missing the ${missingName} option`
+          `${selectPropertyName} is missing the ${missingName} option`
         );
       }
       targetOptionsMap[missingName] = option;
@@ -103,7 +146,7 @@ export const setSelectBasedOnMultiselectOptions = async ({
       },
     };
 
-    const pages = await databaseQueryAll({ dbId, filter });
+    const pages = await databaseQueryAll({ client, dbId, filter });
     for (let j = 0; j < pages.length; j++) {
       const page = pages[j];
       const multiProp = page.properties[multiSelectPropertyName];
@@ -128,7 +171,7 @@ export const setSelectBasedOnMultiselectOptions = async ({
         );
       }
 
-      await notionClient.pages.update({
+      await client.pages.update({
         page_id: page.id,
         properties: {
           [multiSelectPropertyName]: {
@@ -136,7 +179,7 @@ export const setSelectBasedOnMultiselectOptions = async ({
               (o) => !optionNamesToMove.includes(o.name)
             ),
           },
-          [tgtSingleSelectPropertyName]: {
+          [selectPropertyName]: {
             select: {
               id: targetOption.id!,
               name: targetOption.name!,
@@ -148,9 +191,12 @@ export const setSelectBasedOnMultiselectOptions = async ({
     }
   }
 
-  await removeMultiselectOptions({
+  await removeSelectOptions({
+    client,
     dbId,
-    multiSelectPropertyName,
-    optionNamesToRemove: optionNamesToMove,
+    propertyName: multiSelectPropertyName,
+    optionsToRemove: optionNamesToMove,
   });
 };
+
+export default registerCommand;

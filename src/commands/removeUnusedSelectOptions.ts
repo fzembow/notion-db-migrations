@@ -13,11 +13,11 @@ const registerCommand = (program: Command) => {
     )
     .requiredOption(
       "--db-id <database-id>",
-      "The ID of the notion database whose pages shall be archived."
+      "The ID of the notion database to modify."
     )
     .requiredOption(
       "--property <property>",
-      "The name of the property in which the choices should be merged."
+      "The name of the property from which unused choices should be removed."
     )
     .action(async ({ dbId, property: propertyName }) => {
       await removeUnusedSelectOptions({
