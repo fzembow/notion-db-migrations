@@ -108,10 +108,6 @@ export const mergeSelectOptions = async ({
       );
     }
 
-    console.log("the old options");
-    // @ts-ignore
-    console.log(selectProp[prop.type]);
-
     // Remove any of the values we are mapping _from_
     // @ts-ignore
     const options: SelectChoice[] = selectProp[prop.type].filter(
@@ -126,9 +122,6 @@ export const mergeSelectOptions = async ({
         color: outputOption.color,
       });
     }
-
-    console.log("the new options");
-    console.log(options);
 
     await client.pages.update({
       page_id: page.id,

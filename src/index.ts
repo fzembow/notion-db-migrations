@@ -2,6 +2,7 @@ import { Command } from "commander";
 import archiveAllPagesInDb from "./commands/archiveAllPagesInDatabase";
 import mergeSelectOptions from "./commands/mergeSelectOptions";
 import removeSelectOptions from "./commands/removeSelectOptions";
+import removeUnusedSelectOptions from "./commands/removeUnusedSelectOptions";
 
 const program = new Command();
 program.requiredOption("-t, --token <token>", "notion api token");
@@ -10,10 +11,10 @@ program.requiredOption("-t, --token <token>", "notion api token");
 archiveAllPagesInDb(program);
 mergeSelectOptions(program);
 removeSelectOptions(program);
+removeUnusedSelectOptions(program);
 
 // TODO
 // createPagesForMultiselect.ts
-// removeUnusedMultiselectOptions.ts
 // setSelectBasedOnMultiselectOptions.ts
 
 async function main() {
