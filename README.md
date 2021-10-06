@@ -21,26 +21,45 @@ yarn go
 
 # Commands
 
-## archive-all-pages-in-db
+## Archive all pages in db
+
+Individually archives all pages in the Notion database specified by `db-id`.
 
 ```
 yarn go archive-all-pages-in-db \
-  --token=<TOKEN> \
-  --db-id=<DB_ID>
+  --token <TOKEN> \
+  --db-id <DB_ID>
 ```
-
-Individually archives all pages in the specified Notion database.
 
 This is somewhat slow since it archives one page at a time. However, it's helpful because it does not blow away the database schema.
 
-## remove-select-options
+## Merge select options (choices)
+
+Merge the `input-names` choices into a single `output-name` choice for the `property` in the database with ID `db-id`.
+
+```
+yarn go merge-select-options \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --property <PROPERTY_NAME> \
+  --output-option <OUTPUT_CHOICE_NAME> \
+  --input-options <INPUT1> <...>
+```
+
+Note that the output option must already exist.
+
+## Remove select options (choices)
+
+Removes the specified `options` from the `property` column. Works for both **Select** and **Multi-select** properties.
 
 ```
 yarn go remove-select-options \
-  --token=<TOKEN> \
-  --db-id=<DB_ID> \
-  --property=<PROPERTY_NAME> \
-  --options=<OPTION1> <...>  \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --property <PROPERTY_NAME> \
+  --options <OPTION1> <...>  \
 ```
 
-Removes the specified `options` from the `property` column. Works for both **Select** and **Multi select** properties.
+# About
+
+Built by fzembow to help automate product management processes at [Formsort](https://formsort.com).

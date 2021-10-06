@@ -12,7 +12,7 @@ export type SelectProperty = Extract<
   { type: "select" }
 >;
 
-export type SelectChoice = SelectProperty["select"]["options"];
+export type SelectChoice = SelectProperty["select"]["options"][number];
 
 export type MultiSelectProperty = Extract<
   GetDatabaseResponse["properties"][string],
