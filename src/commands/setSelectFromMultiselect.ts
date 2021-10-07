@@ -9,7 +9,7 @@ const registerCommand = (program: Command) => {
   program
     .command("set-select-from-multi-select")
     .description(
-      "merge options in a select or multi_select property in a database"
+      "Set a select property based on which choice is set in a multi-select property."
     )
     .requiredOption(
       "--db-id <database-id>",

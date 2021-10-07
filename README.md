@@ -60,6 +60,31 @@ yarn go remove-select-options \
   --options <OPTION1> <...>  \
 ```
 
+## Remove unused select options (choices)
+
+Removes any choices that are unused by any pages within the `property` column. Works for both **Select** and **Multi-select** properties.
+
+```
+yarn go remove-select-options \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --property <PROPERTY_NAME>
+```
+
+## Set select from multi-select
+
+For each page in the database, set the `select-property` based on which of the `options` are set on the `multi-select-property`.
+
+```
+yarn go remove-select-options \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --property <PROPERTY_NAME> \
+  --select-property <select-property> \
+  --multi-select-property <multi-select-property> \
+  --options <OPTION1> <...>
+```
+
 # About
 
 Built by fzembow to help automate product management processes at [Formsort](https://formsort.com).

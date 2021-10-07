@@ -9,7 +9,7 @@ const registerCommand = (program: Command) => {
   program
     .command("remove-unused-select-options")
     .description(
-      "merge options in a select or multi_select property in a database"
+      "Remove select choices which are unused in any page in the database."
     )
     .requiredOption(
       "--db-id <database-id>",
