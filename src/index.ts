@@ -1,5 +1,6 @@
 import { Command } from "commander";
 import archiveAllPagesInDb from "./commands/archiveAllPagesInDatabase";
+import copyBetweenDbs from "./commands/copyBetweenDbs";
 import mergeSelectOptions from "./commands/mergeSelectOptions";
 import removeSelectOptions from "./commands/removeSelectOptions";
 import removeUnusedSelectOptions from "./commands/removeUnusedSelectOptions";
@@ -10,6 +11,7 @@ program.requiredOption("-t, --token <token>", "notion api token");
 
 // Register all the sub-commands.
 archiveAllPagesInDb(program);
+copyBetweenDbs(program);
 mergeSelectOptions(program);
 removeSelectOptions(program);
 removeUnusedSelectOptions(program);

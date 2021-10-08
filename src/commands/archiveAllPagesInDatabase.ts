@@ -1,7 +1,7 @@
 import { Client } from "@notionhq/client/build/src";
 import { Command } from "commander";
 import { getNotionClient } from "../notionClient";
-import { databaseQueryAll } from "../utils";
+import { databaseQueryAll } from "../utils/notion";
 
 const registerCommand = (program: Command) => {
   program

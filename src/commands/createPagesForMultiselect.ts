@@ -1,5 +1,5 @@
 import { Client } from "@notionhq/client/build/src";
-import { createPage } from "../utils";
+import { createPage } from "../utils/notion";
 
 type Args = {
   client: Client;

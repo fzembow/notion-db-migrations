@@ -2,7 +2,7 @@ import { Client } from "@notionhq/client/build/src";
 import { Command } from "commander";
 import { getNotionClient } from "../notionClient";
 import { QueryDatabaseFilter, SelectChoice } from "../types";
-import { databaseQueryAll } from "../utils";
+import { databaseQueryAll } from "../utils/notion";
 import { removeSelectOptions } from "./removeSelectOptions";
 
 const registerCommand = (program: Command) => {
@@ -63,13 +63,6 @@ export const mergeSelectOptions = async ({
   inputOptionNames,
   outputOptionName,
 }: Args) => {
-  console.log({
-    dbId,
-    propertyName,
-    inputOptionNames,
-    outputOptionName,
-  });
-
   const db = await client.databases.retrieve({ database_id: dbId });
   const prop = db.properties[propertyName];
   let outputOption: SelectChoice | undefined;

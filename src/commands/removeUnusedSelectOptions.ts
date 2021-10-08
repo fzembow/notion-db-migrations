@@ -2,7 +2,7 @@ import { Client } from "@notionhq/client/build/src";
 import { Command } from "commander";
 import { getNotionClient } from "../notionClient";
 import { QueryDatabaseFilter, SelectChoice } from "../types";
-import { databaseQueryAll } from "../utils";
+import { databaseQueryAll } from "../utils/notion";
 import { removeSelectOptions } from "./removeSelectOptions";
 
 const registerCommand = (program: Command) => {

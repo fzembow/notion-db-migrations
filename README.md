@@ -21,9 +21,9 @@ yarn go
 
 # Commands
 
-## Archive all pages in db
+## Archive all pages in a database
 
-Individually archives all pages in the Notion database specified by `db-id`.
+Individually archives all pages in the Notion database specified by `db-id`. It's helpful because it does not blow away the database schema, like deleting the database does.
 
 ```
 yarn go archive-all-pages-in-db \
@@ -31,7 +31,18 @@ yarn go archive-all-pages-in-db \
   --db-id <DB_ID>
 ```
 
-This is somewhat slow since it archives one page at a time. However, it's helpful because it does not blow away the database schema.
+This is somewhat slow since it archives one page at a time.
+
+## Copy pages
+
+Ensures the target schema is comparible with the source, and then copies pages over individually to the target.
+
+```
+yarn go copy-between-dbs \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --target-db-id <TARGET_DB_ID>
+```
 
 ## Merge select options (choices)
 

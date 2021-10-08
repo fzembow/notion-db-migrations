@@ -1,6 +1,6 @@
 import { Client } from "@notionhq/client/build/src";
 import { QueryDatabaseResponse } from "@notionhq/client/build/src/api-endpoints";
-import { QueryDatabaseFilter, QueryDatabaseResults } from "./types";
+import { QueryDatabaseFilter, QueryDatabaseResults } from "../types";
 
 /**
  * Run a database query, but return all results, following the cursor
