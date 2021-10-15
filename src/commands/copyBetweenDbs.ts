@@ -130,11 +130,60 @@ const copyBetweenDbs = async ({ client, dbId, tgtDbId }: Args) => {
       delete properties[srcTitlePropName];
     }
 
-    await client.pages.create({
+    // TODO: Re-enable me!
+    const newPage = await client.pages.create({
       parent: { database_id: tgtDb.id },
       properties,
     });
+
+    const { id: newPageId } = newPage;
+    await copyBlockChildren(client, page.id, newPageId);
   }
+};
+
+const copyBlockChildren = async (
+  client: Client,
+  srcPageId: string,
+  tgtPageId: string
+) => {
+  const srcBlocks = await client.blocks.children.list({
+    block_id: srcPageId,
+  });
+
+  if (srcBlocks.has_more) {
+    throw new Error(
+      "Listing blocks with more than 100 children is not currently supported"
+    );
+  }
+
+  for (const srcBlock of srcBlocks.results) {
+    console.log("\n\nCOPYING:\n\n");
+    console.log(srcBlock);
+    // TODO: This will fail on image blocks. It seems that
+    // the File object returned from Notion will show the notion-
+    // uploaded URL (signed aws url) while you can only create
+    // external URLs. We could do something crazy like download the notion
+    // file, upload it to s3, and then put it back in notion...
+    const newTgtBlock = await client.blocks.children.append({
+      block_id: tgtPageId,
+      // @ts-ignore
+      children: [srcBlock],
+    });
+  }
+
+  // This is just a test of creating blocks
+  // await client.blocks.children.append({
+  //   block_id: tgtPageId,
+  //   children: [
+  //     {
+  //       object: "block",
+  //       type: "heading_2",
+  //       heading_2: {
+  //         text: [{ type: "text", text: { content: "Lacinato kale" } }],
+  //       },
+  //     },
+  //   ],
+  // });
 };
 
 const getTitlePropName = (db: GetDatabaseResponse): string => {
