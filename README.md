@@ -44,6 +44,8 @@ yarn go copy-between-dbs \
   --target-db-id <TARGET_DB_ID>
 ```
 
+**IMPORTANT NOTE**: Copying of page _contents_ is not currently implemented.
+
 ## Merge select options (choices)
 
 Merge the `input-names` choices into a single `output-name` choice for the `property` in the database with ID `db-id`.
