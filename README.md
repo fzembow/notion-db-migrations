@@ -48,8 +48,7 @@ yarn go copy-between-dbs \
 
 Merge the `input-names` choices into a single `output-name` choice for the `property` in the database with ID `db-id`.
 
-```
-yarn go merge-select-options \
+```yarn go merge-select-options \
   --token <TOKEN> \
   --db-id <DB_ID> \
   --property <PROPERTY_NAME> \
@@ -82,12 +81,26 @@ yarn go remove-select-options \
   --property <PROPERTY_NAME>
 ```
 
+## Set multi-select from multi-select
+
+For each page in the database, set the `destination-property` based on which of the `options` are set on the `source-property`.
+
+```
+yarn go set-multi-select-from-multi-select \
+  --token <TOKEN> \
+  --db-id <DB_ID> \
+  --property <PROPERTY_NAME> \
+  --source-property <source-property> \
+  --destination-property <destination-property> \
+  --options <OPTION1> <...>
+```
+
 ## Set select from multi-select
 
 For each page in the database, set the `select-property` based on which of the `options` are set on the `multi-select-property`.
 
 ```
-yarn go remove-select-options \
+yarn go set-select-from-multi-select \
   --token <TOKEN> \
   --db-id <DB_ID> \
   --property <PROPERTY_NAME> \
