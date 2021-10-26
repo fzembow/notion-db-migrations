@@ -4,6 +4,7 @@ import copyBetweenDbs from "./commands/copyBetweenDbs";
 import mergeSelectOptions from "./commands/mergeSelectOptions";
 import removeSelectOptions from "./commands/removeSelectOptions";
 import removeUnusedSelectOptions from "./commands/removeUnusedSelectOptions";
+import setMultiSelectBasedOnMultiselectOptions from "./commands/setMultiselectFromMultiselect";
 import setSelectFromMultiselect from "./commands/setSelectFromMultiselect";
 
 const program = new Command();
@@ -15,6 +16,7 @@ copyBetweenDbs(program);
 mergeSelectOptions(program);
 removeSelectOptions(program);
 removeUnusedSelectOptions(program);
+setMultiSelectBasedOnMultiselectOptions(program);
 setSelectFromMultiselect(program);
 
 // TODO

@@ -23,7 +23,7 @@ const registerCommand = (program: Command) => {
       "--select-property <select-property>",
       "The name of the target select property where the choices should be set."
     )
-    .requiredOption("--options <options...>", "The options to be removed.")
+    .requiredOption("--options <options...>", "The options to be moved.")
     .action(
       async ({
         dbId,
